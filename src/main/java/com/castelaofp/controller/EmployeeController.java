@@ -104,6 +104,7 @@ public class EmployeeController {
 		Employee employee = EmployeeMapper.toEntity(employeeDto);
 		Optional<Employee> optionalEmployee = employeeService.update(employeeId, employee);
 		if (optionalEmployee.isPresent()) {
+			employeeDto = EmployeeMapper.toDto(optionalEmployee.get());
 			return ResponseEntity.ok(employeeDto);
 		} else {
 			return ResponseEntity.notFound().build();
