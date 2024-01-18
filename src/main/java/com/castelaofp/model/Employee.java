@@ -17,13 +17,8 @@ public class Employee {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
-	@NotBlank(message = "Name is mandatory")
 	private String name;
-
-	@NotBlank(message = "Salary is mandatory")
 	private BigDecimal salary;
-
 	private Date createdDate;
 
 	// Constructor, getters, and setters
