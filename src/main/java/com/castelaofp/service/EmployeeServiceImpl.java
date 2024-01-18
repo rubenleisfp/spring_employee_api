@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.castelaofp.model.Employee;
-import com.castelaofp.repository.EmployeeRepository;
+import com.castelaofp.repository.EmployeeJpaRepository;
 import com.castelaofp.repository.EmployeeRepositoryImpl;
 
 @Service
@@ -18,8 +18,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	private static Logger LOG = LoggerFactory.getLogger(EmployeeRepositoryImpl.class);
 
+	//@Autowired
+	//private EmployeeRepository employeeRepository;
+	
 	@Autowired
-	private EmployeeRepository employeeRepository;
+	private EmployeeJpaRepository employeeRepository;
 
 	@Override
 	public List<Employee> findAll() {
