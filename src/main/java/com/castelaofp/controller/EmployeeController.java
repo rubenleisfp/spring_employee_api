@@ -44,7 +44,7 @@ public class EmployeeController {
 	}
 
 	
-	public ResponseEntity<EmployeeDto> updateEmployee(@PathVariable(value = "id") Long employeeId,
+	public ResponseEntity<EmployeeDto> update(@PathVariable(value = "id") Long employeeId,
 			@Valid @RequestBody EmployeeDto employeeDto) {
 		throw new UnsupportedOperationException();
 	}
