@@ -76,7 +76,7 @@ public class EmployeeController {
 
 	@Operation(summary = "Create an employee")
 	@ApiResponses(value = { 
-	  @ApiResponse(responseCode = "200", description = "Employee created", 
+	  @ApiResponse(responseCode = "201", description = "Employee created", 
 	    content = { @Content(mediaType = "application/json", 
 	      schema = @Schema(implementation = EmployeeDto.class)) }),
 	  @ApiResponse(responseCode = "400", description = "Data not valid", 
@@ -99,7 +99,7 @@ public class EmployeeController {
 	  @ApiResponse(responseCode = "400", description = "Data not valid", 
 	    content = @Content) })
 	@PutMapping("/{id}")
-	public ResponseEntity<EmployeeDto> updateEmployee(@PathVariable(value = "id") Long employeeId,
+	public ResponseEntity<EmployeeDto> update(@PathVariable(value = "id") Long employeeId,
 			@Valid @RequestBody EmployeeDto employeeDto) {
 		Employee employee = EmployeeMapper.toEntity(employeeDto);
 		Optional<Employee> optionalEmployee = employeeService.update(employeeId, employee);
