@@ -28,10 +28,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 
-
 /**
- * http://localhost:8080/v3/api-docs
- * http://localhost:8080/swagger-ui/index.html
+ * http://localhost:8080/v3/api-docs http://localhost:8080/swagger-ui/index.html
  * 
  */
 
@@ -48,23 +46,24 @@ public class EmployeeController {
 		List<Employee> entities = employeeService.findAll();
 		return EmployeeMapper.toDto(entities);
 	}
-	
+
 	@Operation(summary = "Get an employee by its id")
-	@ApiResponses(value = { 
-	  @ApiResponse(responseCode = "200", description = "Employee found", 
-	    content = { @Content(mediaType = "application/json", 
-	      schema = @Schema(implementation = Employee.class)) }),
-	  @ApiResponse(responseCode = "404", description = "Employee not found", 
-	    content = @Content) })
+	@ApiResponses(value = {
+	    @ApiResponse(responseCode = "200", description = "Employee found", content = {
+	        @Content(mediaType = "application/json", schema = @Schema(implementation = Employee.class))
+	    }),
+		@ApiResponse(responseCode = "404", description = "Employee not found", content = {
+		        @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))})
+	})		
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<EmployeeDto> getById(@PathVariable("id") Long employeeId) {
+	public ResponseEntity<?> getById(@PathVariable("id") Long employeeId) {
 
 		Optional<Employee> employee = employeeService.getById(employeeId);
 		if (employee.isPresent()) {
 			EmployeeDto employeeDto = EmployeeMapper.toDto(employee.get());
 			return ResponseEntity.ok().body(employeeDto);
 		} else {
-			return ResponseEntity.notFound().build();
+			return responseNotFound(employeeId);
 		}
 	}
 
@@ -75,12 +74,12 @@ public class EmployeeController {
 	}
 
 	@Operation(summary = "Create an employee")
-	@ApiResponses(value = { 
-	  @ApiResponse(responseCode = "201", description = "Employee created", 
-	    content = { @Content(mediaType = "application/json", 
-	      schema = @Schema(implementation = EmployeeDto.class)) }),
-	  @ApiResponse(responseCode = "400", description = "Data not valid", 
-	    content = @Content) })
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "201", description = "Employee created", content = {
+					@Content(mediaType = "application/json", schema = @Schema(implementation = EmployeeDto.class)) }),
+			@ApiResponse(responseCode = "400", description = "Data not valid", content = {
+			        @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))})
+			})
 	@PostMapping
 	public ResponseEntity<EmployeeDto> create(@Valid @RequestBody EmployeeDto employeeDto) {
 		Employee employee = EmployeeMapper.toEntity(employeeDto);
@@ -89,41 +88,50 @@ public class EmployeeController {
 		return new ResponseEntity<>(dtoWithId, HttpStatus.CREATED);
 	}
 
+
 	@Operation(summary = "Update an employee by its id")
-	@ApiResponses(value = { 
-	  @ApiResponse(responseCode = "200", description = "Employee updated", 
-	    content = { @Content(mediaType = "application/json", 
-	      schema = @Schema(implementation = EmployeeDto.class)) }),
-	  @ApiResponse(responseCode = "404", description = "Employee not found", 
-	    content = @Content),
-	  @ApiResponse(responseCode = "400", description = "Data not valid", 
-	    content = @Content) })
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Employee updated", content = {
+					@Content(mediaType = "application/json", schema = @Schema(implementation = EmployeeDto.class)) }),
+			@ApiResponse(responseCode = "404", description = "Employee not found", content = {
+			        @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+			@ApiResponse(responseCode = "400", description = "Data not valid", content = {
+			        @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))})
+	})
 	@PutMapping("/{id}")
-	public ResponseEntity<EmployeeDto> update(@PathVariable(value = "id") Long employeeId,
+	public ResponseEntity<?> update(@PathVariable(value = "id") Long employeeId,
 			@Valid @RequestBody EmployeeDto employeeDto) {
 		Employee employee = EmployeeMapper.toEntity(employeeDto);
 		Optional<Employee> optionalEmployee = employeeService.update(employeeId, employee);
 		if (optionalEmployee.isPresent()) {
-			employeeDto = EmployeeMapper.toDto(employee);
+			employeeDto = EmployeeMapper.toDto(optionalEmployee.get());
 			return ResponseEntity.ok(employeeDto);
 		} else {
-			return ResponseEntity.notFound().build();
+			return responseNotFound(employeeId);
 		}
 	}
 
 	@Operation(summary = "Delete an employee by its id")
-	@ApiResponses(value = { 
-	  @ApiResponse(responseCode = "200", description = "Employee deleted", 
-	    content = { @Content(mediaType = "application/json")}),
-	  @ApiResponse(responseCode = "404", description = "Employee not found", 
-	    content = @Content) })
+	@ApiResponses(value = {
+	    @ApiResponse(responseCode = "200", description = "Employee deleted", content = {
+	        @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class))
+	    }),
+	    @ApiResponse(responseCode = "404", description = "Employee not found", content = {
+	        @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+	    })
+	})
 	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<EmployeeDto> delete(@PathVariable("id") Long employeeId) {
+	public ResponseEntity<?> delete(@PathVariable("id") Long employeeId) {
 		boolean deleted = employeeService.delete(employeeId);
 		if (deleted) {
 			return ResponseEntity.ok().build();
 		} else {
-			return ResponseEntity.notFound().build();
+			return responseNotFound(employeeId);
 		}
+	}
+
+	private ResponseEntity<?> responseNotFound(Long employeeId) {
+		String errorMessage = "Employee with id '" + employeeId + "' not found";
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(errorMessage));
 	}
 }
