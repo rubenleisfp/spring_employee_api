@@ -57,7 +57,7 @@ public class EmployeeController {
 	  @ApiResponse(responseCode = "404", description = "Employee not found", 
 	    content = @Content) })
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<EmployeeDto> getById(@PathVariable("id") Long employeeId) {
+	public ResponseEntity<?> getById(@PathVariable("id") Long employeeId) {
 
 		Optional<Employee> employee = employeeService.getById(employeeId);
 		if (employee.isPresent()) {
@@ -99,7 +99,7 @@ public class EmployeeController {
 	  @ApiResponse(responseCode = "400", description = "Data not valid", 
 	    content = @Content) })
 	@PutMapping("/{id}")
-	public ResponseEntity<EmployeeDto> update(@PathVariable(value = "id") Long employeeId,
+	public ResponseEntity<?> update(@PathVariable(value = "id") Long employeeId,
 			@Valid @RequestBody EmployeeDto employeeDto) {
 		Employee employee = EmployeeMapper.toEntity(employeeDto);
 		Optional<Employee> optionalEmployee = employeeService.update(employeeId, employee);
@@ -118,7 +118,7 @@ public class EmployeeController {
 	  @ApiResponse(responseCode = "404", description = "Employee not found", 
 	    content = @Content) })
 	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<EmployeeDto> delete(@PathVariable("id") Long employeeId) {
+	public ResponseEntity<?> delete(@PathVariable("id") Long employeeId) {
 		boolean deleted = employeeService.delete(employeeId);
 		if (deleted) {
 			return ResponseEntity.ok().build();
