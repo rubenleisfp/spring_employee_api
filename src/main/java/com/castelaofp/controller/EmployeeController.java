@@ -29,7 +29,7 @@ public class EmployeeController {
 	}
 	
 
-	public ResponseEntity<EmployeeDto> getById(@PathVariable("id") Long employeeId) {
+	public ResponseEntity<?> getById(@PathVariable("id") Long employeeId) {
 		throw new UnsupportedOperationException();
 
 	}
@@ -44,13 +44,13 @@ public class EmployeeController {
 	}
 
 	
-	public ResponseEntity<EmployeeDto> update(@PathVariable(value = "id") Long employeeId,
+	public ResponseEntity<?> update(@PathVariable(value = "id") Long employeeId,
 			@Valid @RequestBody EmployeeDto employeeDto) {
 		throw new UnsupportedOperationException();
 	}
 
 
-	public ResponseEntity<EmployeeDto> delete(@PathVariable("id") Long employeeId) {
+	public ResponseEntity<?> delete(@PathVariable("id") Long employeeId) {
 		throw new UnsupportedOperationException();
 	}
 }
