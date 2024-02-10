@@ -22,6 +22,7 @@ import com.castelaofp.model.Employee;
 import com.castelaofp.service.EmployeeService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -37,101 +38,117 @@ import jakarta.validation.Valid;
 @RequestMapping("/employees")
 public class EmployeeController {
 
-	@Autowired
-	private EmployeeService employeeService;
+    @Autowired
+    private EmployeeService employeeService;
 
-	@Operation(summary = "Get all employees")
-	@GetMapping
-	public List<EmployeeDto> findAll() {
-		List<Employee> entities = employeeService.findAll();
-		return EmployeeMapper.toDto(entities);
-	}
+    @Operation(summary = "Get all employees")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Employees found", content = {
+                    @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = EmployeeDto.class)))
+            })
+    })
+    @GetMapping
+    public List<EmployeeDto> findAll() {
+        List<Employee> entities = employeeService.findAll();
+        return EmployeeMapper.toDto(entities);
+    }
 
-	@Operation(summary = "Get an employee by its id")
-	@ApiResponses(value = {
-	    @ApiResponse(responseCode = "200", description = "Employee found", content = {
-	        @Content(mediaType = "application/json", schema = @Schema(implementation = Employee.class))
-	    }),
-		@ApiResponse(responseCode = "404", description = "Employee not found", content = {
-		        @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))})
-	})		
-	@GetMapping(value = "/{id}")
-	public ResponseEntity<?> getById(@PathVariable("id") Long employeeId) {
+    @Operation(summary = "Get an employee by its id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Employee found", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = EmployeeDto.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "Employee not found", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            })
+    })
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<?> getById(@PathVariable("id") Long employeeId) {
+        Optional<Employee> employee = employeeService.getById(employeeId);
+        if (employee.isPresent()) {
+            EmployeeDto employeeDto = EmployeeMapper.toDto(employee.get());
+            return ResponseEntity.ok().body(employeeDto);
+        } else {
+            return responseNotFound(employeeId);
+        }
+    }
 
-		Optional<Employee> employee = employeeService.getById(employeeId);
-		if (employee.isPresent()) {
-			EmployeeDto employeeDto = EmployeeMapper.toDto(employee.get());
-			return ResponseEntity.ok().body(employeeDto);
-		} else {
-			return responseNotFound(employeeId);
-		}
-	}
+    @Operation(summary = "Get all employees with %name%")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Employees found", content = {
+                    @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = EmployeeDto.class)))
+            })
+    })
+    @GetMapping(value = "search")
+    public List<EmployeeDto> findByName(@RequestParam(name = "name") String name) {
+        List<Employee> employees = employeeService.findByName(name);
+        List<EmployeeDto> dtos = EmployeeMapper.toDto(employees);
+        return dtos;
+    }
 
-	@Operation(summary = "Get all employees with %name%")
-	@GetMapping(value = "search")
-	public List<Employee> findByName(@RequestParam(name = "name") String name) {
-		return employeeService.findByName(name);
-	}
+    @Operation(summary = "Create an employee")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Employee created", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = EmployeeDto.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Data not valid", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            })
+    })
+    @PostMapping
+    public ResponseEntity<EmployeeDto> create(@Valid @RequestBody EmployeeDto employeeDto) {
+        Employee employee = EmployeeMapper.toEntity(employeeDto);
+        employee = employeeService.create(employee);
+        EmployeeDto dtoWithId = EmployeeMapper.toDto(employee);
+        return new ResponseEntity<>(dtoWithId, HttpStatus.CREATED);
+    }
 
-	@Operation(summary = "Create an employee")
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "201", description = "Employee created", content = {
-					@Content(mediaType = "application/json", schema = @Schema(implementation = EmployeeDto.class)) }),
-			@ApiResponse(responseCode = "400", description = "Data not valid", content = {
-			        @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))})
-			})
-	@PostMapping
-	public ResponseEntity<EmployeeDto> create(@Valid @RequestBody EmployeeDto employeeDto) {
-		Employee employee = EmployeeMapper.toEntity(employeeDto);
-		employee = employeeService.create(employee);
-		EmployeeDto dtoWithId = EmployeeMapper.toDto(employee);
-		return new ResponseEntity<>(dtoWithId, HttpStatus.CREATED);
-	}
+    @Operation(summary = "Update an employee by its id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Employee updated", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = EmployeeDto.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "Employee not found", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Data not valid", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            })
+    })
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@PathVariable(value = "id") Long employeeId,
+                                    @Valid @RequestBody EmployeeDto employeeDto) {
+        Employee employee = EmployeeMapper.toEntity(employeeDto);
+        Optional<Employee> optionalEmployee = employeeService.update(employeeId, employee);
+        if (optionalEmployee.isPresent()) {
+            employeeDto = EmployeeMapper.toDto(optionalEmployee.get());
+            return ResponseEntity.ok(employeeDto);
+        } else {
+            return responseNotFound(employeeId);
+        }
+    }
 
+    @Operation(summary = "Delete an employee by its id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Employee deleted", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "Employee not found", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            })
+    })
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<?> delete(@PathVariable("id") Long employeeId) {
+        boolean deleted = employeeService.delete(employeeId);
+        if (deleted) {
+            return ResponseEntity.ok().build();
+        } else {
+            return responseNotFound(employeeId);
+        }
+    }
 
-	@Operation(summary = "Update an employee by its id")
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "Employee updated", content = {
-					@Content(mediaType = "application/json", schema = @Schema(implementation = EmployeeDto.class)) }),
-			@ApiResponse(responseCode = "404", description = "Employee not found", content = {
-			        @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
-			@ApiResponse(responseCode = "400", description = "Data not valid", content = {
-			        @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))})
-	})
-	@PutMapping("/{id}")
-	public ResponseEntity<?> update(@PathVariable(value = "id") Long employeeId,
-			@Valid @RequestBody EmployeeDto employeeDto) {
-		Employee employee = EmployeeMapper.toEntity(employeeDto);
-		Optional<Employee> optionalEmployee = employeeService.update(employeeId, employee);
-		if (optionalEmployee.isPresent()) {
-			employeeDto = EmployeeMapper.toDto(optionalEmployee.get());
-			return ResponseEntity.ok(employeeDto);
-		} else {
-			return responseNotFound(employeeId);
-		}
-	}
-
-	@Operation(summary = "Delete an employee by its id")
-	@ApiResponses(value = {
-	    @ApiResponse(responseCode = "200", description = "Employee deleted", content = {
-	        @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class))
-	    }),
-	    @ApiResponse(responseCode = "404", description = "Employee not found", content = {
-	        @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
-	    })
-	})
-	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<?> delete(@PathVariable("id") Long employeeId) {
-		boolean deleted = employeeService.delete(employeeId);
-		if (deleted) {
-			return ResponseEntity.ok().build();
-		} else {
-			return responseNotFound(employeeId);
-		}
-	}
-
-	private ResponseEntity<?> responseNotFound(Long employeeId) {
-		String errorMessage = "Employee with id '" + employeeId + "' not found";
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(errorMessage));
-	}
+    private ResponseEntity<?> responseNotFound(Long employeeId) {
+        String errorMessage = "Employee with id '" + employeeId + "' not found";
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(errorMessage));
+    }
 }
