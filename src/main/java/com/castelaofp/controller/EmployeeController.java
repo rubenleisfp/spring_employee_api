@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.castelaofp.dto.EmployeeDto;
-import com.castelaofp.model.Employee;
 
 import jakarta.validation.Valid;
 
@@ -34,7 +33,7 @@ public class EmployeeController {
 
 	}
 
-	public List<Employee> findByName(@RequestParam(name = "name") String name) {
+	public List<EmployeeDto> findByName(@RequestParam(name = "name") String name) {
 		throw new UnsupportedOperationException();
 	}
 
