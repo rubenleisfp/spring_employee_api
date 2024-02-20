@@ -2,6 +2,8 @@ package com.castelaofp.dto;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -16,6 +18,7 @@ public class EmployeeDto {
     @NotNull(message = "Salary is mandatory")
     private BigDecimal salary;
 
+    @JsonFormat(pattern="yyyy-MM-dd")
     private Date createdDate;
 
     // Constructor, getters, and setters
