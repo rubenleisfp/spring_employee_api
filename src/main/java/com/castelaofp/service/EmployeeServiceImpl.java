@@ -17,7 +17,7 @@ import com.castelaofp.repository.EmployeeRepositoryImpl;
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
-	private static Logger LOG = LoggerFactory.getLogger(EmployeeRepositoryImpl.class);
+	private static Logger LOG = LoggerFactory.getLogger(EmployeeServiceImpl.class);
 
 	@Autowired
 	private EmployeeRepository employeeRepository;
