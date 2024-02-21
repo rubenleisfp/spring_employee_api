@@ -7,18 +7,19 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.castelaofp.model.Employee;
 import com.castelaofp.repository.EmployeeRepository;
-import com.castelaofp.repository.EmployeeRepositoryImpl;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
-	private static Logger LOG = LoggerFactory.getLogger(EmployeeRepositoryImpl.class);
+	private static Logger LOG = LoggerFactory.getLogger(EmployeeServiceImpl.class);
 
 	@Autowired
+	@Qualifier("jpa")
 	private EmployeeRepository employeeRepository;
 	
 
