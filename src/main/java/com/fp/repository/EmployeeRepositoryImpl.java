@@ -1,4 +1,4 @@
-package com.castelaofp.repository;
+package com.fp.repository;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
-import com.castelaofp.model.Employee;
+import com.fp.model.Employee;
 
 @Repository
 public class EmployeeRepositoryImpl implements EmployeeRepository {

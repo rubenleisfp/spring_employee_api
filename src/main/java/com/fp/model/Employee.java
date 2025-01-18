@@ -1,4 +1,4 @@
-package com.castelaofp.model;
+package com.fp.model;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -8,7 +8,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "employee")

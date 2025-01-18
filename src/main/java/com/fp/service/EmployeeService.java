@@ -1,9 +1,9 @@
-package com.castelaofp.service;
+package com.fp.service;
 
 import java.util.List;
 import java.util.Optional;
 
-import com.castelaofp.model.Employee;
+import com.fp.model.Employee;
 
 public interface EmployeeService {
 	

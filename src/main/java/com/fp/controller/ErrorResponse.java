@@ -1,4 +1,4 @@
-package com.castelaofp.controller;
+package com.fp.controller;
 
 public class ErrorResponse {
  

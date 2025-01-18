@@ -1,4 +1,4 @@
-package com.castelaofp.spring_employee_api;
+package com.fp;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

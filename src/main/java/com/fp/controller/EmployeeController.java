@@ -1,4 +1,4 @@
-package com.castelaofp.controller;
+package com.fp.controller;
 
 import java.util.List;
 
@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.castelaofp.dto.EmployeeDto;
+import com.fp.dto.EmployeeDto;
 
 import jakarta.validation.Valid;
 
