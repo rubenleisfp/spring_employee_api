@@ -49,8 +49,8 @@ public class EmployeeController {
     })
     @GetMapping
     public List<EmployeeDto> findAll() {
-        List<Employee> entities = employeeService.findAll();
-        return EmployeeMapper.toDto(entities);
+        List<EmployeeDto> employeesDto = employeeService.findAll();
+        return employeesDto;
     }
 
     @Operation(summary = "Get an employee by its id")
@@ -64,9 +64,8 @@ public class EmployeeController {
     })
     @GetMapping(value = "/{id}")
     public ResponseEntity<?> getById(@PathVariable("id") Long employeeId) {
-        Optional<Employee> employee = employeeService.getById(employeeId);
-        if (employee.isPresent()) {
-            EmployeeDto employeeDto = EmployeeMapper.toDto(employee.get());
+        Optional<EmployeeDto> employeeDto = employeeService.getById(employeeId);
+        if (employeeDto.isPresent()){
             return ResponseEntity.ok().body(employeeDto);
         } else {
             return responseNotFound(employeeId);
@@ -81,9 +80,8 @@ public class EmployeeController {
     })
     @GetMapping(value = "search")
     public List<EmployeeDto> findByName(@RequestParam(name = "name") String name) {
-        List<Employee> employees = employeeService.findByName(name);
-        List<EmployeeDto> dtos = EmployeeMapper.toDto(employees);
-        return dtos;
+        List<EmployeeDto> employeesDto = employeeService.findByName(name);
+        return employeesDto;
     }
 
     @Operation(summary = "Create an employee")
@@ -97,10 +95,8 @@ public class EmployeeController {
     })
     @PostMapping
     public ResponseEntity<EmployeeDto> create(@Valid @RequestBody EmployeeDto employeeDto) {
-        Employee employee = EmployeeMapper.toEntity(employeeDto);
-        employee = employeeService.create(employee);
-        EmployeeDto dtoWithId = EmployeeMapper.toDto(employee);
-        return new ResponseEntity<>(dtoWithId, HttpStatus.CREATED);
+        EmployeeDto  employeeDtoSaved = employeeService.create(employeeDto);
+        return new ResponseEntity<>(employeeDtoSaved, HttpStatus.CREATED);
     }
 
     @Operation(summary = "Update an employee by its id")
@@ -118,10 +114,8 @@ public class EmployeeController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable(value = "id") Long employeeId,
                                     @Valid @RequestBody EmployeeDto employeeDto) {
-        Employee employee = EmployeeMapper.toEntity(employeeDto);
-        Optional<Employee> optionalEmployee = employeeService.update(employeeId, employee);
-        if (optionalEmployee.isPresent()) {
-            employeeDto = EmployeeMapper.toDto(optionalEmployee.get());
+        Optional<EmployeeDto> employeeDtoUpdated = employeeService.update(employeeId, employeeDto);
+        if (employeeDtoUpdated.isPresent()) {
             return ResponseEntity.ok(employeeDto);
         } else {
             return responseNotFound(employeeId);
