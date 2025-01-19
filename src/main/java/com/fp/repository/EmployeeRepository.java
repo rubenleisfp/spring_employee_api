@@ -1,9 +1,9 @@
-package com.castelaofp.repository;
+package com.fp.repository;
 
 import java.util.List;
 import java.util.Optional;
 
-import com.castelaofp.model.Employee;
+import com.fp.model.Employee;
 
 public interface EmployeeRepository {
 

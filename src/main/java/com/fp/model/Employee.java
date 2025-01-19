@@ -1,4 +1,4 @@
-package com.castelaofp.model;
+package com.fp.model;
 
 import java.math.BigDecimal;
 import java.util.Date;

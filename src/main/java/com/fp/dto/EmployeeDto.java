@@ -1,4 +1,4 @@
-package com.castelaofp.dto;
+package com.fp.dto;
 import java.math.BigDecimal;
 import java.util.Date;
 

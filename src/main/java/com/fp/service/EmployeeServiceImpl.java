@@ -1,4 +1,4 @@
-package com.castelaofp.service;
+package com.fp.service;
 
 import java.sql.Date;
 import java.util.List;
@@ -9,9 +9,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.castelaofp.model.Employee;
-import com.castelaofp.repository.EmployeeRepository;
-import com.castelaofp.repository.EmployeeRepositoryImpl;
+import com.fp.model.Employee;
+import com.fp.repository.EmployeeRepository;
+import com.fp.repository.EmployeeRepositoryImpl;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {

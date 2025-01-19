@@ -1,4 +1,4 @@
-package com.castelaofp.controller;
+package com.fp.controller;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.castelaofp.dto.EmployeeDto;
-import com.castelaofp.mapper.EmployeeMapper;
-import com.castelaofp.model.Employee;
-import com.castelaofp.service.EmployeeService;
+import com.fp.dto.EmployeeDto;
+import com.fp.mapper.EmployeeMapper;
+import com.fp.model.Employee;
+import com.fp.service.EmployeeService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
