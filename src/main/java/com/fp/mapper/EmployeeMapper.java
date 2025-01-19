@@ -1,10 +1,10 @@
-package com.castelaofp.mapper;
+package com.fp.mapper;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.castelaofp.dto.EmployeeDto;
-import com.castelaofp.model.Employee;
+import com.fp.dto.EmployeeDto;
+import com.fp.model.Employee;
 
 /**
  * Clase para transformar clase del modelo a dto y viceversa
