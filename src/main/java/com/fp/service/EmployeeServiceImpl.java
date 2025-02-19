@@ -21,7 +21,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 	private static Logger LOG = LoggerFactory.getLogger(EmployeeServiceImpl.class);
 
 	@Autowired
-	@Qualifier("jpa")
 	private EmployeeRepository employeeRepository;
 
 
