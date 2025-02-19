@@ -94,15 +94,7 @@ public class EmployeeController {
 		throw new UnsupportedOperationException();
 	}
 
-	@Operation(summary = "Delete an employee by its id")
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "Employee deleted", content = {
-					@Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class))
-			}),
-			@ApiResponse(responseCode = "404", description = "Employee not found", content = {
-					@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
-			})
-	})
+
 	public ResponseEntity<?> delete(@PathVariable("id") Long employeeId) {
 		throw new UnsupportedOperationException();
 	}
