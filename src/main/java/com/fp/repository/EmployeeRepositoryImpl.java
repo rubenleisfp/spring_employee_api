@@ -82,10 +82,36 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
 		return Optional.empty();
 	}
 
+	//Alternativa a findById sin Optional
+	//TODO Eliminar este main una vez entendido el Optional
+	public Employee findByIdSinOptional(Long id) {
+		for (Employee employee : employeeList) {
+			if (employee.getId().equals(id)) {
+				return employee;
+			}
+		}
+		return null;
+	}
+
 
 	// Método para eliminar un empleado por ID
 	public void deleteById(Long id) {
 		employeeList.removeIf(employee -> employee.getId().equals(id));
+	}
+
+	//TODO Eliminar este main una vez entendido el Optional
+	public static void main(String[] args) {
+		EmployeeRepositoryImpl repository = new EmployeeRepositoryImpl();
+		repository.save(new Employee(1L, "John Doe", new BigDecimal("50000.00")));
+		repository.save(new Employee(2L, "Jane Smith", new BigDecimal("60000.00")));
+
+		Optional<Employee> employeeOptional = repository.findById(3L);
+		if (employeeOptional.isPresent()) {
+			System.out.println(employeeOptional.get().getName());
+		}
+
+		Employee employee = repository.findByIdSinOptional(3L);
+		System.out.println(employee.getName());
 	}
 
 }
